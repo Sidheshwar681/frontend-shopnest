@@ -14,9 +14,9 @@
           <button
             class="btn btn-primary btn-sm"
             @click="$emit('add-to-cart', product.id)"
-            :disabled="product.stock <= 0"
+            :disabled="availableStock <= 0"
           >
-            <i class="bi bi-cart-plus me-1"></i>{{ product.stock > 0 ? "Add to Cart" : "Add to Cart" }}
+            <i class="bi bi-cart-plus me-1"></i>{{ availableStock > 0 ? "Add to Cart" : "Out of Stock" }}
           </button>
         </div>
         <!-- Category Badge -->
@@ -53,8 +53,8 @@
 
         <!-- Stock Status -->
         <div class="mb-3">
-          <small v-if="product.stock > 0" class="text-success">
-            <i class="bi bi-check-circle me-1"></i>{{ product.stock }} in stock
+          <small v-if="availableStock > 0" class="text-success">
+            <i class="bi bi-check-circle me-1"></i>{{ availableStock }} in stock
           </small>
           <small v-else class="text-danger">
             <i class="bi bi-x-circle me-1"></i>Out of stock
@@ -91,7 +91,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   product: {
     type: Object,
     required: true,
@@ -100,6 +102,10 @@ defineProps({
 });
 
 defineEmits(["add-to-cart", "add-to-wishlist"]);
+
+const availableStock = computed(() => {
+  return Number(props.product.stock ?? props.product.stock_quantity ?? 0);
+});
 
 const fallbackImage =
   "https://images.unsplash.com/photo-1557821552-17105176677c?w=600&h=500&fit=crop";

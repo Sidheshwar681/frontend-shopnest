@@ -29,7 +29,7 @@
             <small class="badge bg-warning text-dark">
               {{ product.category_name || "General" }}
             </small>
-            <small v-if="product.stock > 0" class="badge bg-success">
+            <small v-if="availableStock > 0" class="badge bg-success">
               <i class="bi bi-check-circle me-1"></i>In Stock
             </small>
             <small v-else class="badge bg-danger">
@@ -98,17 +98,17 @@
                   class="form-control text-center"
                   v-model.number="quantity"
                   min="1"
-                  :max="product.stock"
+                  :max="availableStock"
                 />
                 <button
                   class="btn btn-outline-secondary"
-                  @click="quantity < product.stock ? quantity++ : null"
-                  :disabled="quantity >= product.stock"
+                  @click="quantity < availableStock ? quantity++ : null"
+                  :disabled="quantity >= availableStock"
                 >
                   <i class="bi bi-plus"></i>
                 </button>
               </div>
-              <small class="text-muted">{{ product.stock }} available</small>
+              <small class="text-muted">{{ availableStock }} available</small>
             </div>
           </div>
 
@@ -117,10 +117,10 @@
             <button
               class="btn btn-primary btn-lg flex-grow-1"
               @click="addToCart"
-              :disabled="product.stock <= 0"
+              :disabled="availableStock <= 0"
             >
               <i class="bi bi-cart-plus me-2"></i>
-              {{ product.stock > 0 ? "Add to Cart" : "Out of Stock" }}
+              {{ availableStock > 0 ? "Add to Cart" : "Out of Stock" }}
             </button>
             <button class="btn btn-outline-secondary btn-lg">
               <i class="bi bi-heart me-2"></i>Wishlist
@@ -185,7 +185,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import api from "../services/api";
 import { useCartStore } from "../stores/cartStore";
@@ -203,6 +203,10 @@ const product = ref(null);
 const relatedProducts = ref([]);
 const quantity = ref(1);
 const loading = ref(true);
+
+const availableStock = computed(() => {
+  return Number(product.value?.stock ?? product.value?.stock_quantity ?? 0);
+});
 
 onMounted(async () => {
   try {
