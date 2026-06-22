@@ -16,7 +16,7 @@
             @click="$emit('add-to-cart', product.id)"
             :disabled="product.stock <= 0"
           >
-            <i class="bi bi-cart-plus me-1"></i>{{ product.stock > 0 ? "Add to Cart" : "Out of Stock" }}
+            <i class="bi bi-cart-plus me-1"></i>{{ product.stock > 0 ? "Add to Cart" : "Add to Cart" }}
           </button>
         </div>
         <!-- Category Badge -->
