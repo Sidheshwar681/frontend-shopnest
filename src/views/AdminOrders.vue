@@ -171,8 +171,15 @@ const selectedOrder = ref(null);
 const loadOrders = async () => {
   try {
     loading.value = true;
-    const res = await api.get("/orders");
+
+    const res = await api.get("/orders/admin/all");
+
+    console.log("API Response:", res.data);
+
     orders.value = res.data || [];
+
+    console.log("Orders Value:", orders.value);
+
   } catch (error) {
     console.error("Error loading orders:", error);
   } finally {
